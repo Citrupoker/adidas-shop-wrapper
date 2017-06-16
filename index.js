@@ -1,8 +1,14 @@
 const express = require('express')
 const app = express()
+app.use((req,res,next)=>{
+    res.setHeader('Content-Type', 'application/json');
+    next()
+})
+var Nightmare = require('nightmare');
 
-app.get('/addToCart', function (req, res) {
-  res.send('Hello World!')
+app.get('/addToCart/:url/:size', function (req, res) {
+    addToCart(req.params.url, req.params.size, ()=>res.send({status: 1}))
+  
 })
 
 app.get('/info/:item', function (req, res) {
@@ -19,8 +25,31 @@ app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 })
 
+function addToCart(itemUrl, size, callback){
+    var nightmare = Nightmare({ show: false });
+    var loginUrl = "https://shop.adidas.ae/en/customer/account/login/referer/"
+    console.log(loginUrl)
+    nightmare
+        .goto(loginUrl)
+        .wait(200)
+        .type("#email", "evansantonio32@gmail.com")
+        .type("#pass", "adidas.3u")
+        .click("button.button.button--lg.button--info.button--login")
+        .wait(500)
+        .goto(itemUrl)
+        .wait(1000)
+        .evaluate(function (size){
+            Array.prototype.slice.call(document.querySelectorAll(".js-size-value ")).filter((v)=>v.textContent == size)[0].click()
+            document.querySelector(".button--product-add.js-add-to-bag").click()
+            return;
+        }, size)
+        .then(()=>callback())
+
+
+
+}   
+
 function itemInfo(itemUrl, callback) {
-    var Nightmare = require('nightmare');
     var nightmare = Nightmare({ show: false });
 
     nightmare
@@ -29,15 +58,16 @@ function itemInfo(itemUrl, callback) {
         .evaluate(function () {
             var item = {
                 color: document.querySelector(".product__color").textContent.trim().replace("Color ", ""),
-                sizes: Array.prototype.slice.call(document.querySelectorAll(".product-size .js-size-value")).map((size)=>(size.textContent)),
+                sizes: Array.prototype.slice.call(document.querySelectorAll(".product-size .js-size-value")).filter((size)=>!size.className.includes("disabled")).map((size)=>(size.textContent)),
                 priceAED: document.querySelector(".price").textContent.replace("AED", ""),
                 genders: Array.prototype.slice.call(document.querySelectorAll(".gender a")).map((gender)=>gender.textContent),
                 name: document.querySelector(".product__name.product__name--big-screen h1").textContent,
-                category: document.querySelector(".division a").textContent
+                category: document.querySelector(".division a").textContent,
+                link: itemUrl
             }
             return item;
             //return document.querySelectorAll(".table-of-contents__title a")
-        })
+        }).end()
         .then(function (item) {
             //console.log(JSON.stringify(courses));
 
@@ -55,7 +85,6 @@ function itemInfo(itemUrl, callback) {
 }
 
 function search(query, callback) {
-    var Nightmare = require('nightmare');
     var nightmare = Nightmare({ show: false });
 
     var searchQuery = "Adidas nmd";
@@ -69,7 +98,7 @@ function search(query, callback) {
             var items = Array.prototype.slice.call(document.querySelectorAll("#products-list .card__link.card__link--text")).map((item) => ({ name: item.title, link: item.href }))
             return items;
             //return document.querySelectorAll(".table-of-contents__title a")
-        })
+        }).end()
         .then(function (items) {
             //console.log(JSON.stringify(courses));
 
