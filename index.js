@@ -18,7 +18,7 @@ app.get('/api/info/:item', function (req, res) {
 
 app.get('/', function (req, res) {
     res.setHeader('Content-Type', 'text/plain');
-    res.sendFile(__dirname + "/docs.html")
+    res.sendFile(__dirname + "/README.md")
 })
 
 app.get('/api/search/:searchQuery', function (req, res) {
