@@ -13,7 +13,7 @@ app.use("/api/*", (req, res, next) => {
 function throttler(req, res, next) {
     if (isBusy) {
         console.log("Busy.. waiting a couple of seconds")
-        setTimeout(() => throttler(req, res, next), 2500)
+        setTimeout(() => throttler(req, res, next), 250)
     } else {
         console.log("Not busy! Go!")
         isBusy=true;
