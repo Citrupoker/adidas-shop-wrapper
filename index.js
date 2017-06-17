@@ -3,6 +3,33 @@ const app = express()
 
 var isBusy = false;
 
+var Nightmare = require('nightmare');
+var nightmare = Nightmare({ show: true });
+var loginUrl = "https://shop.adidas.ae/en/customer/account/login/referer/"
+
+start();
+function start() {
+    nightmare
+        .goto(loginUrl + "?" + Math.random())
+        .wait(500)
+        .insert("#email", "evansantonio32@gmail.com")
+        .insert("#pass", "adidas.3u")
+        .click("button.button.button--lg.button--info.button--login")
+        .wait(1000)
+        .evaluate(function () {
+            return document.title;
+        })
+        .then((title) => {
+            if (title == "Customer Login") {
+                start()
+            } else {
+
+                app.listen(3000, function () {
+                    console.log('Example app listening on port 3000!')
+                })
+            }
+        })
+}
 app.use("/api/*", (req, res, next) => {
     console.log("Hit API end point")
     res.setHeader('Content-Type', 'application/json');
@@ -16,7 +43,7 @@ function throttler(req, res, next) {
         setTimeout(() => throttler(req, res, next), 250)
     } else {
         console.log("Not busy! Go!")
-        isBusy=true;
+        isBusy = true;
         next()
     }
 
@@ -33,7 +60,7 @@ app.get('/api/cart/add/:url/:size', throttler, function (req, res) {
 app.get('/api/info/:item', function (req, res) {
     itemInfo(req.params.item, (info) => {
         res.send(info)
-        isBusy = false;
+        //isBusy = false;
     });
 })
 
@@ -46,27 +73,15 @@ app.get('/', function (req, res) {
 app.get('/api/search/:searchQuery', function (req, res) {
     search(req.params.searchQuery, (results) => {
         res.send(results);
-        isBusy = false;
+        //isBusy = false;
     })
 })
 
-app.listen(3000, function () {
-    console.log('Example app listening on port 3000!')
-})
 
 function addToCart(itemUrl, size, callback) {
 
-    var Nightmare = require('nightmare');
-    var nightmare = Nightmare({ show: false });
-    var loginUrl = "https://shop.adidas.ae/en/customer/account/login/referer/"
     console.log(loginUrl)
     nightmare
-        .goto(loginUrl)
-        .wait(100)
-        .insert("#email", "evansantonio32@gmail.com")
-        .insert("#pass", "adidas.3u")
-        .click("button.button.button--lg.button--info.button--login")
-        .wait(400)
         .goto(itemUrl)
         .wait(200)
         .evaluate(function (size) {
@@ -74,7 +89,7 @@ function addToCart(itemUrl, size, callback) {
             document.querySelector(".button--product-add.js-add-to-bag").click()
             alert(size);
             return;
-        }, size).end()
+        }, size)
         .then(() => callback())
 
 
