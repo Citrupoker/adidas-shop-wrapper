@@ -91,10 +91,8 @@ function itemInfo(itemUrl, callback) {
 
 }
 
-function search(query, callback) {
+function search(searchQuery, callback) {
     var nightmare = Nightmare({ show: false });
-
-    var searchQuery = "Adidas nmd";
 
     var searchUrl = "https://shop.adidas.ae/en/search?q=" + searchQuery.split(" ").join("+")
 
@@ -115,7 +113,7 @@ function search(query, callback) {
                 status: 1,
                 length: items.length,
                 url: searchUrl,
-                terms: query.split(" ")
+                terms: searchQuery.split(" ")
             })
 
             /* var tasks = courses.map((course, index) => (
