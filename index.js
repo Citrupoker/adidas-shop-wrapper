@@ -1,18 +1,39 @@
 const express = require('express')
 const app = express()
-app.use("/api/", (req, res, next) => {
+
+var isBusy = false;
+
+app.use("/api/*", (req, res, next) => {
+    console.log("Hit API end point")
     res.setHeader('Content-Type', 'application/json');
-    next()
+    throttler(next)
 })
-var Nightmare = require('nightmare');
+
+function throttler(next) {
+    if (isBusy) {
+        console.log("Busy.. waiting a couple of seconds")
+        setTimeout(() => throttler(next), 2500)
+    } else {
+        console.log("Not busy! Go!")
+        isBusy=true;
+        next()
+    }
+
+}
 
 app.get('/api/cart/add/:url/:size', function (req, res) {
-    addToCart(req.params.url, req.params.size, () => res.send({ status: 1 }))
+    addToCart(req.params.url, req.params.size, () => {
+        res.send({ status: 1 })
+        isBusy = false;
+    })
 
 })
 
 app.get('/api/info/:item', function (req, res) {
-    itemInfo(req.params.item, (info) => res.send(info));
+    itemInfo(req.params.item, (info) => {
+        res.send(info)
+        isBusy = false;
+    });
 })
 
 
@@ -24,6 +45,7 @@ app.get('/', function (req, res) {
 app.get('/api/search/:searchQuery', function (req, res) {
     search(req.params.searchQuery, (results) => {
         res.send(results);
+        isBusy = false;
     })
 })
 
@@ -32,6 +54,8 @@ app.listen(3000, function () {
 })
 
 function addToCart(itemUrl, size, callback) {
+
+    var Nightmare = require('nightmare');
     var nightmare = Nightmare({ show: false });
     var loginUrl = "https://shop.adidas.ae/en/customer/account/login/referer/"
     console.log(loginUrl)
@@ -47,8 +71,9 @@ function addToCart(itemUrl, size, callback) {
         .evaluate(function (size) {
             Array.prototype.slice.call(document.querySelectorAll(".js-size-value ")).filter((v) => v.textContent == size)[0].click()
             document.querySelector(".button--product-add.js-add-to-bag").click()
+            alert(size);
             return;
-        }, size)
+        }, size).end()
         .then(() => callback())
 
 
@@ -56,6 +81,8 @@ function addToCart(itemUrl, size, callback) {
 }
 
 function itemInfo(itemUrl, callback) {
+
+    var Nightmare = require('nightmare');
     var nightmare = Nightmare({ show: false });
 
     nightmare
@@ -92,6 +119,8 @@ function itemInfo(itemUrl, callback) {
 }
 
 function search(searchQuery, callback) {
+
+    var Nightmare = require('nightmare');
     var nightmare = Nightmare({ show: false });
 
     var searchUrl = "https://shop.adidas.ae/en/search?q=" + searchQuery.split(" ").join("+")
