@@ -6,13 +6,14 @@ var isBusy = false;
 app.use("/api/*", (req, res, next) => {
     console.log("Hit API end point")
     res.setHeader('Content-Type', 'application/json');
-    throttler(next)
+    //throttler(req, res, next)
+    next()
 })
 
-function throttler(next) {
+function throttler(req, res, next) {
     if (isBusy) {
         console.log("Busy.. waiting a couple of seconds")
-        setTimeout(() => throttler(next), 2500)
+        setTimeout(() => throttler(req, res, next), 2500)
     } else {
         console.log("Not busy! Go!")
         isBusy=true;
@@ -21,7 +22,7 @@ function throttler(next) {
 
 }
 
-app.get('/api/cart/add/:url/:size', function (req, res) {
+app.get('/api/cart/add/:url/:size', throttler, function (req, res) {
     addToCart(req.params.url, req.params.size, () => {
         res.send({ status: 1 })
         isBusy = false;
