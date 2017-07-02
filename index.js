@@ -23,7 +23,7 @@ function throttler (req, res, next) {
 }
 
 app.post('/api/cart/add/:url/:size', throttler, function (req, res) {
-  wrapper.addToCart(req.body.url, req.body.size, req.body.account, () => {
+  wrapper.addToCart(req.body.url, req.body.size, accounts.getAccount(req.body.account), () => {
     res.json({ status: 1 })
     isBusy = false
   })
