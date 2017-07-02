@@ -20,3 +20,10 @@ module.exports.addProxy = function (name, ip, port, user, pass) {
 module.exports.deleteProxy = function (name) {
   db('proxies').remove({name: name})
 }
+
+
+// generate a random useragent
+module.exports.genUseragent = function (name) {
+  var userAgents = []
+  return userAgents[Math.round((Math.random() * userAgents.length))]
+}
