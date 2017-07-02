@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 var Nightmare = require('nightmare')
-var nightmare = Nightmare({ show: true })
 var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
 function start () {
@@ -97,20 +96,10 @@ function itemInfo (itemUrl, callback) {
             status: 1
           }
           return item
-            // return document.querySelectorAll(".table-of-contents__title a")
         }).end()
         .then(function (item) {
-            // console.log(JSON.stringify(courses));
-
           item.link = itemUrl
           callback(item)
-
-            /* var tasks = courses.map((course, index) => (
-                 (callback) => {
-                     scrape(course, index, callback)
-                 }
-             ))
-             require("async.parallellimit")(tasks, 1, function () {}); */
         })
 }
 
