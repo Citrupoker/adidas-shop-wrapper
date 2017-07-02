@@ -73,16 +73,22 @@ app.get('/api/delete/proxy/:name', function (req, res) {
   return res.json({status: 0})
 })
 
+app.get('/api/all/proxies', function (req, res) {
+  res.json(proxyrotation.getAllProxies())
+})
+
 app.post('/api/add/account', function (req, res) {
   var name = req.body.name
   var email = req.body.email
   var pass = req.body.pass
   accounts.addAccount(name, email, pass)
+  res.json({status: 1})
 })
 
 app.get('/api/delete/account/:name', function (req, res) {
   var name = req.params.name
   accounts.removeAccount(name)
+  res.json({status: 1})
 })
 
 app.listen(3000, function () {
