@@ -1,7 +1,7 @@
 var proxyRotation = require('../proxyrotation')
 
 module.exports = function (Nightmare) {
-  var proxy = proxyRotation.getProxy()
+  var proxy = proxyRotation.randomProxy()
   var nightmare = new Nightmare(
     {
       show: false,
@@ -10,11 +10,11 @@ module.exports = function (Nightmare) {
       electronPath: require('electron'),
       switches: {
         'ignore-certificate-errors': true,
-        'proxy-server': proxy.addr
+        'proxy-server': proxy.ip + ':' + proxy.port
       },
       webPreferences: {
         webSecurity: false
       }
     })
-  return nightmare.useragent(proxyRotation.genUseragent()).authentication(proxy.user, proxy.password)
+  return nightmare.useragent(proxyRotation.genUseragent()).authentication(proxy.user, proxy.pass)
 }
