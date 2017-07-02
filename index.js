@@ -56,7 +56,7 @@ app.post('/api/add/proxy', function (req, res) {
   var name = req.body.name
   var user = req.body.user
   var pass = req.body.pass
-  console.log(proxy && port && name && user && pass)
+  console.log(proxy)
   if (proxy && port && name && user && pass) {
     proxyrotation.addProxy(name, proxy, port, user, pass)
     return res.json({status: 1})
@@ -93,5 +93,5 @@ app.get('/api/delete/account/:name', function (req, res) {
 })
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+  console.log('app listening on port 3000!')
 })
