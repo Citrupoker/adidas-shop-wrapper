@@ -27,7 +27,7 @@ function throttler (req, res, next) {
 }
 
 app.post('/api/cart/add/:url/:size', throttler, function (req, res) {
-  wrapper.addToCart(req.body.url, req.body.size, accounts.getAccount(req.body.account), () => {
+  wrapper.addToCart(req.body.url, req.body.size, accounts.getAccount(req.body.accountName), () => {
     res.json({ status: 1 })
     isBusy = false
   })
@@ -44,8 +44,8 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/README.md')
 })
 
-app.get('/api/search/:searchQuery', function (req, res) {
-  wrapper.search(req.params.searchQuery, (results) => {
+app.get('/api/search/:accountName/:searchQuery', function (req, res) {
+  wrapper.search(req.params.searchQuery, accounts.getAccount(req.params.accountName), (results) => {
     res.json(results)
   })
 })
@@ -62,7 +62,6 @@ app.post('/api/add/proxy', function (req, res) {
     return res.json({status: 1})
   }
   return res.json({status: 0})
-
 })
 
 app.get('/api/delete/proxy/:name', function (req, res) {
