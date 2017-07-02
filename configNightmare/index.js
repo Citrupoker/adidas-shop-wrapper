@@ -16,5 +16,5 @@ module.exports = function (Nightmare) {
         webSecurity: false
       }
     })
-  return nightmare.useragent(proxy.genUseragent()).authentication(proxy.user, proxy.password)
+  return nightmare.useragent(proxyRotation.genUseragent()).authentication(proxy.user, proxy.password)
 }
