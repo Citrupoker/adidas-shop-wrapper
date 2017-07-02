@@ -56,12 +56,13 @@ app.post('/api/add/proxy', function (req, res) {
   var name = req.body.name
   var user = req.body.user
   var pass = req.body.pass
-
+  console.log(proxy && port && name && user && pass)
   if (proxy && port && name && user && pass) {
     proxyrotation.addProxy(name, proxy, port, user, pass)
     return res.json({status: 1})
   }
   return res.json({status: 0})
+
 })
 
 app.get('/api/delete/proxy/:name', function (req, res) {
