@@ -70,7 +70,7 @@ function itemInfo (itemUrl, callback) {
 
 
 function search (searchQuery, callback) {
-  var nightmare = require('./configNightmare')(Nightmare)
+  var nightmare = require('../configNightmare')(Nightmare)
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
   nightmare
         .goto(searchUrl)
