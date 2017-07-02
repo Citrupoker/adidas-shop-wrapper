@@ -78,11 +78,8 @@ function search (searchQuery, callback) {
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
           return items
-            // return document.querySelectorAll(".table-of-contents__title a")
         }).end()
         .then(function (items) {
-            // console.log(JSON.stringify(courses));
-
           callback({
             items: items,
             status: 1,
