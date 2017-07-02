@@ -4,6 +4,10 @@ var wrapper = require('./wrapper')
 var isBusy = false
 var proxyrotation = require('./proxyrotation')
 var accounts = require('./accounts')
+var bodyParser = require('body-parser')
+
+app.use(bodyParser.json({extended: true})) // get JSON data
+app.use(bodyParser.urlencoded({extended: true}))
 
 app.use('/api/*', (req, res, next) => {
   console.log('Hit API end point')
