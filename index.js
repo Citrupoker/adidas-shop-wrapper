@@ -76,8 +76,8 @@ app.post('/api/add/account', function (req, res) {
   accounts.addAccount(name, email, pass)
 })
 
-app.get('/api/delete/account', function (req, res) {
-  var name = req.body.name
+app.get('/api/delete/account/:name', function (req, res) {
+  var name = req.params.name
   accounts.removeAccount(name)
 })
 
