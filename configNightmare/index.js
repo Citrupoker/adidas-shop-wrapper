@@ -2,6 +2,7 @@ var proxyRotation = require('../proxyrotation')
 
 module.exports = function (Nightmare) {
   var proxy = proxyRotation.randomProxy()
+  console.log(proxy)
   var nightmare = new Nightmare(
     {
       show: false,
