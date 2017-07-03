@@ -68,7 +68,7 @@ function search (searchQuery, account, callback) {
   var nightmare = null
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
-
+  console.log(account)
   while (nightmare === null) {
     nightmare = start(loginUrl, account)
   }
