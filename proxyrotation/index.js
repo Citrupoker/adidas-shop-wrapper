@@ -11,10 +11,10 @@ module.exports.getAllProxies = function () {
   return db.object.proxies
 }
 
-module.exports.addProxy = function (name, ip, port, user, pass) {
+module.exports.addProxy = function (name, addr, port, user, pass) {
   db('proxies').push({
     name: name,
-    ip: ip,
+    addr: addr,
     port: port,
     user: user,
     pass: pass

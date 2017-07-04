@@ -73,7 +73,7 @@ app.get('/api/delete/proxy/:name', function (req, res) {
   return res.json({status: 0})
 })
 
-app.get('/api/all/proxies', function (req, res) {
+app.get('/api/all/proxy', function (req, res) {
   res.json(proxyrotation.getAllProxies())
 })
 
