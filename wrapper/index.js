@@ -3,6 +3,10 @@ var Nightmare = require('nightmare')
 function start (loginUrl, account) {
   var nightmare = require('../configNightmare')(Nightmare)
   var response = null
+
+  console.log(loginUrl)
+  console.log(account)
+
   nightmare
         .goto(loginUrl + '?' + Math.random())
         .wait(500)
@@ -15,7 +19,7 @@ function start (loginUrl, account) {
         })
         .then((title) => {
           if (title === 'Customer Login') {
-            response = null
+            response = start(loginUrl, account)
           } else {
             response = nightmare
           }
@@ -25,14 +29,9 @@ function start (loginUrl, account) {
 }
 
 function addToCart (itemUrl, size, account, callback) {
-  var nightmare = null
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
-  while (nightmare === null) {
-    nightmare = start(loginUrl, account)
-  }
-
-  nightmare.goto(itemUrl)
+  start(loginUrl, account).goto(itemUrl)
         .wait(200)
         .evaluate(function (size) {
           Array.prototype.slice.call(document.querySelectorAll('.js-size-value ')).filter((v) => v.textContent == size)[0].click()
@@ -65,16 +64,10 @@ function itemInfo (itemUrl, callback) {
 }
 
 function search (searchQuery, account, callback) {
-  var nightmare = null
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
-  console.log(account)
-  while (nightmare === null) {
-    nightmare = start(loginUrl, account)
-  }
 
-  nightmare
-        .goto(searchUrl)
+  start(loginUrl, account).goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
