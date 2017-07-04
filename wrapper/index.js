@@ -1,6 +1,6 @@
 var Nightmare = require('nightmare')
 
-function start (loginUrl, account) {
+function start (loginUrl, account, cb) {
   var nightmare = require('../configNightmare')(Nightmare)
 
   console.log(loginUrl)
@@ -19,9 +19,9 @@ function start (loginUrl, account) {
         })
         .then((title) => {
           if (title === 'Customer Login') {
-            console.log('failed')
+            cb(null)
           } else {
-            console.log('succeded')
+            cb(nightmare)
           }
         })
 }
@@ -29,13 +29,17 @@ function start (loginUrl, account) {
 function addToCart (itemUrl, size, account, callback) {
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
-  start(loginUrl, account).goto(itemUrl)
+  start(loginUrl, account, function (nightmare) {
+    if (nightmare !== null) {
+      nightmare.goto(itemUrl)
         .wait(200)
         .evaluate(function (size) {
           Array.prototype.slice.call(document.querySelectorAll('.js-size-value ')).filter((v) => v.textContent == size)[0].click()
           document.querySelector('.button--product-add.js-add-to-bag').click()
         }, size)
         .then(() => callback())
+    }
+  })
 }
 
 function itemInfo (itemUrl, callback) {
@@ -65,7 +69,9 @@ function search (searchQuery, account, callback) {
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
-  start(loginUrl, account).goto(searchUrl)
+  start(loginUrl, account, function (nightmare) {
+    if (nightmare !== null) {
+      nightmare.goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
@@ -80,6 +86,8 @@ function search (searchQuery, account, callback) {
             terms: searchQuery.split(' ')
           })
         })
+    }
+  })
 }
 
 module.exports = {
