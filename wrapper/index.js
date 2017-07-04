@@ -3,9 +3,6 @@ var Nightmare = require('nightmare')
 function start (loginUrl, account, cb) {
   var nightmare = require('../configNightmare')(Nightmare)
 
-  console.log(loginUrl)
-  console.log(account)
-
   // maintain session after login
   return nightmare
         .goto(loginUrl + '?' + Math.random())
@@ -70,6 +67,7 @@ function search (searchQuery, account, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
   start(loginUrl, account, function (nightmare) {
+    console.log(nightmare)
     if (nightmare !== null) {
       nightmare.goto(searchUrl)
         .wait(150)
