@@ -91,6 +91,11 @@ app.get('/api/delete/account/:name', function (req, res) {
   res.json({status: 1})
 })
 
+app.get('/api/all/account', function (req, res) {
+  res.json(accounts.allAccounts())
+})
+
+
 app.listen(3000, function () {
   console.log('app listening on port 3000!')
 })

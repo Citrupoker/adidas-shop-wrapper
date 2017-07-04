@@ -13,3 +13,7 @@ module.exports.removeAccount = function (name) {
 module.exports.getAccount = function (name) {
   return db('accounts').find({name: name})
 }
+
+module.exports.allAccounts = function () {
+  return db.boject.accounts
+}
