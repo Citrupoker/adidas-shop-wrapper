@@ -18,12 +18,13 @@ function start (loginUrl, account) {
         })
         .then((title) => {
           if (title === 'Customer Login') {
-            return start(loginUrl, account)
+            console.log('failed')
           } else {
-            return nightmare
+            console.log('succeded')
           }
         })
         // maintain session after login
+  return nightmare
 }
 
 function addToCart (itemUrl, size, account, callback) {
