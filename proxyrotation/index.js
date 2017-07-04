@@ -4,7 +4,7 @@ var db = flat('db.json', { storage: storage })
 
 module.exports.randomProxy = function () {
   var proxies = db.object.proxies
-  return proxies[Math.round((Math.random() * proxies.length))]
+  return proxies[Math.round((Math.random() * proxies.length - 1))]
 }
 
 module.exports.getAllProxies = function () {
