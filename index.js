@@ -47,8 +47,8 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/README.md')
 })
 
-app.get('/api/search/:accountName/:searchQuery', function (req, res) {
-  wrapper.search(req.params.searchQuery, accounts.getAccount(req.params.accountName), (results) => {
+app.get('/api/search/:searchQuery', function (req, res) {
+  wrapper.search(req.params.searchQuery, (results) => {
     res.json(results)
   })
 })

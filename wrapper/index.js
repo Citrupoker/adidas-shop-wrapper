@@ -62,7 +62,7 @@ function itemInfo (itemUrl, callback) {
         })
 }
 
-function search (searchQuery, account, callback) {
+function search (searchQuery, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
   var nightmare = require('../configNightmare')(Nightmare)
