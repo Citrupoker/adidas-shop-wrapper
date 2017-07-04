@@ -9,6 +9,7 @@ module.exports = function (Nightmare) {
       maxAuthRetries: 10,
       waitTimeout: 100000,
       electronPath: require('electron'),
+      Promise: require('bluebird'),
       switches: {
         'ignore-certificate-errors': true,
         'proxy-server': proxy.addr + ':' + proxy.port
