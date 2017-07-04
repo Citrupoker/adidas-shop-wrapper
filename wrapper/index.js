@@ -4,7 +4,7 @@ function start (loginUrl, account, cb) {
   var nightmare = require('../configNightmare')(Nightmare)
 
   // maintain session after login
-  return nightmare
+  nightmare
         .goto(loginUrl + '?' + Math.random())
         .wait(500)
         .insert('#email', account.email)
