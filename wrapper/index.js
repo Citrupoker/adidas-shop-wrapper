@@ -63,13 +63,10 @@ function itemInfo (itemUrl, callback) {
 }
 
 function search (searchQuery, account, callback) {
-  var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
-  start(loginUrl, account, function (nightmare) {
-    console.log(nightmare)
-    if (nightmare !== null) {
-      nightmare.goto(searchUrl)
+  var nightmare = require('../configNightmare')(Nightmare)
+  nightmare.goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
@@ -84,8 +81,6 @@ function search (searchQuery, account, callback) {
             terms: searchQuery.split(' ')
           })
         })
-    }
-  })
 }
 
 module.exports = {
