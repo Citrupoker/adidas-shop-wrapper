@@ -4,6 +4,7 @@
   "description": "An API-like wrapper around adidas' shop",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "nightmare": "^2.10.0",
     "node-flat-db": "^0.2.1",
