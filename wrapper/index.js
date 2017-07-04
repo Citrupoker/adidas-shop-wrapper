@@ -2,7 +2,6 @@ var Nightmare = require('nightmare')
 
 function start (loginUrl, account) {
   var nightmare = require('../configNightmare')(Nightmare)
-  var response = null
 
   console.log(loginUrl)
   console.log(account)
@@ -19,13 +18,12 @@ function start (loginUrl, account) {
         })
         .then((title) => {
           if (title === 'Customer Login') {
-            response = start(loginUrl, account)
+            return start(loginUrl, account)
           } else {
-            response = nightmare
+            return nightmare
           }
         })
         // maintain session after login
-  return response
 }
 
 function addToCart (itemUrl, size, account, callback) {
