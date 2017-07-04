@@ -15,5 +15,5 @@ module.exports.getAccount = function (name) {
 }
 
 module.exports.allAccounts = function () {
-  return db.boject.accounts
+  return db.object.accounts
 }
