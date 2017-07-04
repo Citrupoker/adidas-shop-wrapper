@@ -5,6 +5,9 @@ var isBusy = false
 var proxyrotation = require('./proxyrotation')
 var accounts = require('./accounts')
 var bodyParser = require('body-parser')
+var Xvfb = require('xvfb')
+var xvfb = new Xvfb()
+xvfb.startSync()
 
 app.use(bodyParser.json({extended: true})) // get JSON data
 app.use(bodyParser.urlencoded({extended: true}))
