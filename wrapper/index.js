@@ -6,7 +6,8 @@ function start (loginUrl, account) {
   console.log(loginUrl)
   console.log(account)
 
-  nightmare
+  // maintain session after login
+  return nightmare
         .goto(loginUrl + '?' + Math.random())
         .wait(500)
         .insert('#email', account.email)
@@ -23,8 +24,6 @@ function start (loginUrl, account) {
             console.log('succeded')
           }
         })
-        // maintain session after login
-  return nightmare
 }
 
 function addToCart (itemUrl, size, account, callback) {
