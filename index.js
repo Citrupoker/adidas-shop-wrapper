@@ -60,7 +60,7 @@ app.post('/api/add/proxy', function (req, res) {
   var user = req.body.user
   var pass = req.body.pass
   console.log(proxy)
-  if (proxy && port && name && user && pass) {
+  if (proxy && port && name) {
     proxyrotation.addProxy(name, proxy, port, user, pass)
     return res.json({status: 1})
   }
