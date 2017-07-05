@@ -47,8 +47,8 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/README.md')
 })
 
-app.get('/api/search/:searchQuery', function (req, res) {
-  wrapper.search(req.params.searchQuery, (results) => {
+app.get('/api/search/:account/:searchQuery', function (req, res) {
+  wrapper.search(req.params.searchQuery, accounts.getAccount((req.params.account), (results) => {
     res.json(results)
   })
 })
@@ -97,7 +97,6 @@ app.get('/api/delete/account/:name', function (req, res) {
 app.get('/api/all/account', function (req, res) {
   res.json(accounts.allAccounts())
 })
-
 
 app.listen(3000, function () {
   console.log('app listening on port 3000!')
