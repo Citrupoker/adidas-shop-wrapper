@@ -4,8 +4,8 @@ var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 function login (loginUrl, account) {
   var nightmare = require('../configNightmare')(Nightmare)
   // maintain session after login
-  return nightmare
-        .goto(loginUrl + '?' + Math.random())
+
+  nightmare.goto(loginUrl + '?' + Math.random())
         .wait(500)
         .insert('#email', account.email)
         .insert('#pass', account.pass)
@@ -19,6 +19,8 @@ function login (loginUrl, account) {
             console.log('logged in')
           }
         })
+
+  return nightmare
 }
 
 function addToCart (itemUrl, size, account, callback) {
