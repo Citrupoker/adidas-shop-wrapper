@@ -37,8 +37,6 @@ function addToCart (itemUrl, size, account, callback) {
   })
 }
 
-
-
 function itemInfo (itemUrl, callback) {
   var nightmare = require('../configNightmare')(Nightmare)
   nightmare
@@ -62,14 +60,10 @@ function itemInfo (itemUrl, callback) {
         })
 }
 
-
-
 function search (searchQuery, account, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
-  
-    
-      login(loginUrl, account).goto(searchUrl)
+  login(loginUrl, account).goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
@@ -84,11 +78,7 @@ function search (searchQuery, account, callback) {
             terms: searchQuery.split(' ')
           })
         })
-    }
-  )
 }
-
-
 
 module.exports = {
   addToCart: addToCart,
