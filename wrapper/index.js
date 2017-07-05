@@ -1,10 +1,10 @@
 var Nightmare = require('nightmare')
 var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
-function start (loginUrl, account, cb) {
+function login (loginUrl, account) {
   var nightmare = require('../configNightmare')(Nightmare)
   // maintain session after login
-  nightmare
+  return nightmare
         .goto(loginUrl + '?' + Math.random())
         .wait(500)
         .insert('#email', account.email)
@@ -15,10 +15,8 @@ function start (loginUrl, account, cb) {
           return document.title
         })
         .then((title) => {
-          if (title === 'Customer Login') {
-            cb(null)
-          } else {
-            cb(nightmare)
+          if (!title === 'Customer Login') {
+            console.log('logged in')
           }
         })
 }
@@ -69,9 +67,9 @@ function itemInfo (itemUrl, callback) {
 function search (searchQuery, account, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
-  start(loginUrl, account, function (nightmare) {
-    if (nightmare) {
-      nightmare.goto(searchUrl)
+  
+    
+      login(loginUrl, account).goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
@@ -87,7 +85,7 @@ function search (searchQuery, account, callback) {
           })
         })
     }
-  })
+  )
 }
 
 
