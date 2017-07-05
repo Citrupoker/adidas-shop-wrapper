@@ -50,7 +50,7 @@ app.get('/', function (req, res) {
 app.get('/api/search/:account/:searchQuery', function (req, res) {
   wrapper.search(req.params.searchQuery, accounts.getAccount((req.params.account), (results) => {
     res.json(results)
-  })
+  }))
 })
 
 app.post('/api/add/proxy', function (req, res) {
