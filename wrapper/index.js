@@ -26,7 +26,7 @@ function login (loginUrl, account) {
 function addToCart (itemUrl, size, account, callback) {
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
-  start(loginUrl, account, function (nightmare) {
+  login(loginUrl, account, function (nightmare) {
     if (nightmare !== null) {
       nightmare.goto(itemUrl)
         .wait(200)
