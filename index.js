@@ -30,7 +30,7 @@ function throttler (req, res, next) {
 }
 
 app.post('/api/cart/add/:url/:size', throttler, function (req, res) {
-  wrapper.addToCart(req.body.url, req.body.size, accounts.getAccount(req.body.accountName), () => {
+  wrapper.addToCart(req.params.url, req.params.size, accounts.getAccount(req.body.accountName), () => {
     res.json({ status: 1 })
     isBusy = false
   })
@@ -39,6 +39,13 @@ app.post('/api/cart/add/:url/:size', throttler, function (req, res) {
 app.get('/api/info/:item', function (req, res) {
   wrapper.itemInfo(req.params.item, (info) => {
     res.json(info)
+  })
+})
+
+app.post('/api/checkout', throttler, function(req, res) {
+  wrapper.checkout(accounts.getAccount(req.body.accountName), req.body.city, req.body.shipAddress, req.body.billAddress, req.body.phone, () => {
+    res.json({ status: 1 })
+    isBusy = false
   })
 })
 
@@ -84,7 +91,8 @@ app.post('/api/add/account', function (req, res) {
   var name = req.body.name
   var email = req.body.email
   var pass = req.body.pass
-  accounts.addAccount(name, email, pass)
+  var credit = req.body.credit
+  accounts.addAccount(name, email, pass, credit)
   res.json({status: 1})
 })
 

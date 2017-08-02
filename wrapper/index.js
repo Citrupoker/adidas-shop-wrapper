@@ -26,17 +26,13 @@ function login (loginUrl, account) {
 function addToCart (itemUrl, size, account, callback) {
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
-  login(loginUrl, account, function (nightmare) {
-    if (nightmare !== null) {
-      nightmare.goto(itemUrl)
+  login(loginUrl, account).goto(itemUrl)
         .wait(200)
         .evaluate(function (size) {
           Array.prototype.slice.call(document.querySelectorAll('.js-size-value ')).filter((v) => v.textContent == size)[0].click()
           document.querySelector('.button--product-add.js-add-to-bag').click()
         }, size)
         .then(() => callback())
-    }
-  })
 }
 
 function itemInfo (itemUrl, callback) {
@@ -82,8 +78,38 @@ function search (searchQuery, account, callback) {
         })
 }
 
+function checkout(account, city, shipAddress, billAddress, phone, callback) {
+  var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
+
+  login(loginUrl, account).goto('https://shop.adidas.ae/en/checkout/onepage/')
+        .wait('.button--checkout-submit')
+        .insert('#shipping:street1', shipAddress)
+        .insert('#billing:street1', billAddress)
+        .insert('#shipping:telephone', phone)
+        .insert('#billing:telephone', phone)
+        .select('#shipping:country_id', 'AE')
+        .select('#billing:country_id', 'AE')
+        .select('#shipping:city_id', city)
+        .select('#billing:city_id', city)
+        .click('.button--checkout-submit')
+        .wait(500)
+        .click('#p_method_checkoutdotcom')
+        .wait(100)
+        .insert('#checkoutdotcom_cc_owner', account.credit.name)
+        .select('#checkoutdotcom_cc_type', account.credit.type)
+        .insert('#checkoutdotcom_cc_number', account.credit.number)
+        .select('#checkoutdotcom_expiration', account.credit.expiration.month)
+        .select('#checkoutdotcom_expiration_yr', account.credit.expiration.year)
+        .insert('#checkoutdotcom_cc_cid', account.credit.cvv)
+        .evaluate(function () {
+          document.querySelectorAll('.button--checkout-submit')[1].click()
+        })
+        .then(() => callback())
+}
+
 module.exports = {
   addToCart: addToCart,
   itemInfo: itemInfo,
-  search: search
+  search: search,
+  checkout: checkout
 }
