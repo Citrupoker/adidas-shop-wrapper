@@ -42,11 +42,8 @@ app.get('/api/info/:item', function (req, res) {
   })
 })
 
-app.post('/api/checkout', throttler, function(req, res) {
-  wrapper.checkout(accounts.getAccount(req.body.accountName), req.body.city, req.body.shipAddress, req.body.billAddress, req.body.phone, () => {
-    res.json({ status: 1 })
-    isBusy = false
-  })
+app.get('/api/checkout', function(req, res) {
+  res.json({'url': 'https://shop.adidas.ae/en/checkout/onepage/'})
 })
 
 app.get('/', function (req, res) {
@@ -91,8 +88,8 @@ app.post('/api/add/account', function (req, res) {
   var name = req.body.name
   var email = req.body.email
   var pass = req.body.pass
-  var credit = req.body.credit
-  accounts.addAccount(name, email, pass, credit)
+  //var credit = req.body.credit
+  accounts.addAccount(name, email, pass)
   res.json({status: 1})
 })
 

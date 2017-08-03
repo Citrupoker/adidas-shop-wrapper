@@ -78,6 +78,7 @@ function search (searchQuery, account, callback) {
         })
 }
 
+/*
 function checkout(account, city, shipAddress, billAddress, phone, callback) {
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
@@ -106,6 +107,7 @@ function checkout(account, city, shipAddress, billAddress, phone, callback) {
         })
         .then(() => callback())
 }
+*/
 
 module.exports = {
   addToCart: addToCart,
