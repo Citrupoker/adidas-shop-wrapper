@@ -58,10 +58,11 @@ function itemInfo (itemUrl, callback) {
         })
 }
 
-function search (searchQuery, account, callback) {
+function search (searchQuery, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
+  var nightmare = require('../configNightmare')(Nightmare)
 
-  login(loginUrl, account).goto(searchUrl)
+  nightmare.goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
