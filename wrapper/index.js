@@ -112,6 +112,6 @@ function checkout(account, city, shipAddress, billAddress, phone, callback) {
 module.exports = {
   addToCart: addToCart,
   itemInfo: itemInfo,
-  search: search,
-  checkout: checkout
+  search: search
+  //checkout: checkout
 }
