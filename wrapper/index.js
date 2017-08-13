@@ -2,12 +2,12 @@ var Nightmare = require('nightmare')
 var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 var vo = require('vo')
 
-var cart = function * (itemUrl, size) {
+var cart = function * (itemUrl, size, account) {
   var nightmare = require('../configNightmare')(Nightmare)
   yield nightmare.goto(loginUrl + '?' + Math.random())
         .wait(500)
-        .insert('#email', 'evansantonio32@gmail.com')
-        .insert('#pass', 'Nokian900')
+        .insert('#email', account.email)
+        .insert('#pass', account.pass)
         .click('button.button.button--lg.button--info.button--login')
         .wait(1000)
 
