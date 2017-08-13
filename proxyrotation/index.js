@@ -2,14 +2,22 @@ var flat = require('node-flat-db')
 var storage = require('node-flat-db/file-sync')
 var db = flat('db.json', { storage: storage })
 
+
 module.exports.randomProxy = function () {
   var proxies = db.object.proxies
-  return proxies[Math.floor((Math.random() * proxies.length))]
+  console.log(proxies)
+  if (proxies) {
+    return proxies[Math.floor((Math.random() * proxies.length))]
+  } else {
+    return null
+  }
 }
+
 
 module.exports.getAllProxies = function () {
   return db.object.proxies
 }
+
 
 module.exports.addProxy = function (name, addr, port, user, pass) {
   db('proxies').push({
@@ -21,9 +29,11 @@ module.exports.addProxy = function (name, addr, port, user, pass) {
   })
 }
 
+
 module.exports.deleteProxy = function (name) {
   db('proxies').remove({name: name})
 }
+
 
 // generate a random useragent
 module.exports.genUseragent = function (name) {

@@ -29,10 +29,11 @@ function throttler (req, res, next) {
   }
 }
 
-app.post('/api/cart/add/:url/:size', throttler, function (req, res) {
-  wrapper.addToCart(req.params.url, req.params.size, accounts.getAccount(req.body.accountName), () => {
-    res.json({ status: 1 })
+app.post('/api/cart/add', throttler, function (req, res) {
+  wrapper.addToCart(req.body.url, req.body.size, function (err, cart) {
     isBusy = false
+    if (err) return res.json({status: 0, cart: cart})
+    return res.json({status: 1, cart: cart})
   })
 })
 
@@ -42,8 +43,8 @@ app.get('/api/info/:item', function (req, res) {
   })
 })
 
-app.get('/api/checkout', function(req, res) {
-  res.json({'url': 'https://shop.adidas.ae/en/checkout/onepage/'})
+app.get('/api/checkout', function (req, res) {
+  res.json({'url': 'https://shop.adidas.ae/en/checkout/cart/'})
 })
 
 app.get('/', function (req, res) {
@@ -88,7 +89,7 @@ app.post('/api/add/account', function (req, res) {
   var name = req.body.name
   var email = req.body.email
   var pass = req.body.pass
-  //var credit = req.body.credit
+
   accounts.addAccount(name, email, pass)
   res.json({status: 1})
 })
@@ -103,6 +104,6 @@ app.get('/api/all/account', function (req, res) {
   res.json(accounts.allAccounts())
 })
 
-app.listen(3000, function () {
+app.listen(3001, function () {
   console.log('app listening on port 3000!')
 })

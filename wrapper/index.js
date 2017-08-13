@@ -1,38 +1,32 @@
 var Nightmare = require('nightmare')
 var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
+var vo = require('vo')
 
-function login (loginUrl, account) {
+var cart = function * (itemUrl, size) {
   var nightmare = require('../configNightmare')(Nightmare)
-  // maintain session after login
-
-  nightmare.goto(loginUrl + '?' + Math.random())
+  yield nightmare.goto(loginUrl + '?' + Math.random())
         .wait(500)
-        .insert('#email', account.email)
-        .insert('#pass', account.pass)
+        .insert('#email', 'evansantonio32@gmail.com')
+        .insert('#pass', 'Nokian900')
         .click('button.button.button--lg.button--info.button--login')
         .wait(1000)
-        .evaluate(function () {
-          return document.title
-        })
-        .then((title) => {
-          if (!title === 'Customer Login') {
-            console.log('logged in')
-          }
-        })
 
-  return nightmare
-}
-
-function addToCart (itemUrl, size, account, callback) {
-  var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
-
-  login(loginUrl, account).goto(itemUrl)
+  var result = yield nightmare.goto(itemUrl)
         .wait(200)
         .evaluate(function (size) {
           Array.prototype.slice.call(document.querySelectorAll('.js-size-value ')).filter((v) => v.textContent == size)[0].click()
           document.querySelector('.button--product-add.js-add-to-bag').click()
+          return document.querySelector('span.minicart__number.is-clickable').textContent
         }, size)
-        .then(() => callback())
+
+  yield nightmare.end()
+  return result
+}
+
+function addToCart (itemUrl, size, cb) {
+  vo(cart)(itemUrl, size).then((result) => {
+    cb(null, result)
+  })
 }
 
 function itemInfo (itemUrl, callback) {
@@ -114,5 +108,5 @@ module.exports = {
   addToCart: addToCart,
   itemInfo: itemInfo,
   search: search
-  //checkout: checkout
+  // checkout: checkout
 }

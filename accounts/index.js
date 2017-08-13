@@ -11,6 +11,8 @@ module.exports.removeAccount = function (name) {
 }
 
 module.exports.getAccount = function (name) {
+  console.log(name)
+  console.log(db('accounts').find({name: name}))
   return db('accounts').find({name: name})
 }
 
