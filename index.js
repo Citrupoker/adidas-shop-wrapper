@@ -30,7 +30,7 @@ function throttler (req, res, next) {
 }
 
 app.post('/api/cart/add', throttler, function (req, res) {
-  wrapper.addToCart(req.body.url, req.body.size, function (err, cart) {
+  wrapper.addToCart(req.body.url, req.body.size, accounts.getAccount(req.body.account) || {name: 'default', email: 'evansantonio32@gmail.com', pass: 'Nokian900'}, function (err, cart) {
     isBusy = false
     if (err) return res.json({status: 0, cart: cart})
     return res.json({status: 1, cart: cart})
@@ -38,8 +38,9 @@ app.post('/api/cart/add', throttler, function (req, res) {
 })
 
 app.get('/api/info/:item', function (req, res) {
-  wrapper.itemInfo(req.params.item, (info) => {
-    res.json(info)
+  wrapper.itemInfo(req.params.item, (err, info) => {
+    if (err) return res.json({status: 0, results: info})
+    res.json({status: 1, results: info})
   })
 })
 
@@ -53,8 +54,9 @@ app.get('/', function (req, res) {
 })
 
 app.get('/api/search/:searchQuery', function (req, res) {
-  wrapper.search(req.params.searchQuery, (results) => {
-    res.json(results)
+  wrapper.search(req.params.searchQuery, (err, results) => {
+    if (err) return res.json({status: 0, results: results})
+    res.json({status: 1, results: results})
   })
 })
 
@@ -81,6 +83,11 @@ app.get('/api/delete/proxy/:name', function (req, res) {
   return res.json({status: 0})
 })
 
+app.get('/api/delete/all/proxy', function (req, res) {
+  proxyrotation.deleteAllProxy()
+  return res.json({status: 1})
+})
+
 app.get('/api/all/proxy', function (req, res) {
   res.json(proxyrotation.getAllProxies())
 })
@@ -90,7 +97,7 @@ app.post('/api/add/account', function (req, res) {
   var email = req.body.email
   var pass = req.body.pass
 
-  accounts.addAccount(name, email, pass)
+  accounts.addAccount(name.trim(), email.trim(), pass.trim())
   res.json({status: 1})
 })
 
@@ -100,8 +107,18 @@ app.get('/api/delete/account/:name', function (req, res) {
   res.json({status: 1})
 })
 
-app.get('/api/all/account', function (req, res) {
+app.get('/api/delete/all/accounts', function (req, res) {
+  accounts.removeAllAccounts()
+  res.json({status: 1})
+})
+
+app.get('/api/all/accounts', function (req, res) {
   res.json(accounts.allAccounts())
+})
+
+app.get('/api/account/:name', function (req, res) {
+  console.log(accounts.getAccount(req.params.name))
+  res.json(accounts.getAccount(req.params.name))
 })
 
 app.listen(3001, function () {

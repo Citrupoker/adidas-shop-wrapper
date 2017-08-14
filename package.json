@@ -7,8 +7,10 @@
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "json-query": "^2.2.2",
     "nightmare": "^2.10.0",
     "node-flat-db": "^0.2.1",
+    "query-json": "^2.0.1",
     "request": "^2.81.0",
     "vo": "^4.0.2",
     "xvfb": "^0.2.3"

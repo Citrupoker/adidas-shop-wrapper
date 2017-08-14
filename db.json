@@ -1,0 +1,14 @@
+{
+  "accounts": [
+    {
+      "name": "james",
+      "email": "jame@yahoo.com",
+      "pass": "rumble"
+    },
+    {
+      "name": "default",
+      "email": "evansantonio32@gmail.com",
+      "pass": "Nokian900"
+    }
+  ]
+}

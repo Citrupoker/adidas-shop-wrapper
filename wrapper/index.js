@@ -2,16 +2,17 @@ var Nightmare = require('nightmare')
 var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 var vo = require('vo')
 
-var cart = function * (itemUrl, size, account) {
-  var nightmare = require('../configNightmare')(Nightmare)
-  yield nightmare.goto(loginUrl + '?' + Math.random())
+function addToCart (itemUrl, size, account, cb) {
+  var cart = function * (itemUrl, size, account) {
+    var nightmare = require('../configNightmare')(Nightmare)
+    yield nightmare.goto(loginUrl + '?' + Math.random())
         .wait(500)
         .insert('#email', account.email)
         .insert('#pass', account.pass)
         .click('button.button.button--lg.button--info.button--login')
         .wait(1000)
 
-  var result = yield nightmare.goto(itemUrl)
+    var result = yield nightmare.goto(itemUrl)
         .wait(200)
         .evaluate(function (size) {
           Array.prototype.slice.call(document.querySelectorAll('.js-size-value ')).filter((v) => v.textContent == size)[0].click()
@@ -19,19 +20,17 @@ var cart = function * (itemUrl, size, account) {
           return document.querySelector('span.minicart__number.is-clickable').textContent
         }, size)
 
-  yield nightmare.end()
-  return result
-}
+    yield nightmare.end()
+    return result
+  }
 
-function addToCart (itemUrl, size, cb) {
-  vo(cart)(itemUrl, size).then((result) => {
-    cb(null, result)
-  })
+  vo(cart)(itemUrl, size, account).then((result) => cb(null, result)).catch(err => cb(err))
 }
 
 function itemInfo (itemUrl, callback) {
-  var nightmare = require('../configNightmare')(Nightmare)
-  nightmare
+  var info = function * (itemUrl) {
+    var nightmare = require('../configNightmare')(Nightmare)
+    var item = yield nightmare
         .goto(itemUrl)
         .wait(100)
         .evaluate(function () {
@@ -45,35 +44,43 @@ function itemInfo (itemUrl, callback) {
             status: 1
           }
           return item
-        }).end()
-        .then(function (item) {
-          item.link = itemUrl
-          callback(item)
         })
+
+    yield nightmare.end()
+    item.link = itemUrl
+    return item
+  }
+
+  vo(info)(itemUrl).then(result => callback(null, result)).catch(err => callback(err))
 }
 
 function search (searchQuery, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
-  var nightmare = require('../configNightmare')(Nightmare)
 
-  nightmare.goto(searchUrl)
+  var newSearch = function * () {
+    var nightmare = require('../configNightmare')(Nightmare)
+    var items = yield nightmare.goto(searchUrl)
         .wait(150)
         .evaluate(function () {
           var items = Array.prototype.slice.call(document.querySelectorAll('#products-list .card__link.card__link--text')).map((item) => ({ name: item.title, link: item.href }))
           return items
-        }).end()
-        .then(function (items) {
-          callback({
-            items: items,
-            status: 1,
-            length: items.length,
-            url: searchUrl,
-            terms: searchQuery.split(' ')
-          })
         })
+    yield nightmare.end()
+    return items
+  }
+
+  vo(newSearch)(searchQuery).then(items => callback(null, {
+    items: items,
+    status: 1,
+    length: items.length,
+    url: searchUrl,
+    terms: searchQuery.split(' ')
+  })).catch(err => callback(err))
 }
 
 /*
+
+callback()
 function checkout(account, city, shipAddress, billAddress, phone, callback) {
   var loginUrl = 'https://shop.adidas.ae/en/customer/account/login/referer/'
 
@@ -108,5 +115,4 @@ module.exports = {
   addToCart: addToCart,
   itemInfo: itemInfo,
   search: search
-  // checkout: checkout
 }
