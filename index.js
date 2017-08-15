@@ -55,6 +55,7 @@ app.get('/', function (req, res) {
 
 app.get('/api/search/:searchQuery', function (req, res) {
   wrapper.search(req.params.searchQuery, (err, results) => {
+    console.log(err)
     if (err) return res.json({status: 0, results: results})
     res.json({status: 1, results: results})
   })
