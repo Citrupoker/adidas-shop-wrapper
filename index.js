@@ -38,7 +38,7 @@ app.post('/api/cart/add', throttler, function (req, res) {
 })
 
 app.get('/api/info/:item', function (req, res) {
-  wrapper.itemInfo(encodeURIComponent(req.params.item), (err, info) => {
+  wrapper.itemInfo(encodeURI(req.params.item), (err, info) => {
     if (err) return res.json({status: 0, results: info})
     res.json({status: 1, results: info})
   })
