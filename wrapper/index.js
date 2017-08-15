@@ -57,7 +57,7 @@ function itemInfo (itemUrl, callback) {
 function search (searchQuery, callback) {
   var searchUrl = 'https://shop.adidas.ae/en/search?q=' + searchQuery.split(' ').join('+')
 
-  var newSearch = function * () {
+  var newSearch = function * (searchQuery) {
     var nightmare = require('../configNightmare')(Nightmare)
     var items = yield nightmare.goto(searchUrl)
         .wait(150)

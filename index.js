@@ -55,6 +55,7 @@ app.get('/', function (req, res) {
 
 app.get('/api/search/:searchQuery', function (req, res) {
   wrapper.search(req.params.searchQuery, (err, results) => {
+    console.log(err)
     if (err) return res.json({status: 0, results: results})
     res.json({status: 1, results: results})
   })
@@ -121,6 +122,6 @@ app.get('/api/account/:name', function (req, res) {
   res.json(accounts.getAccount(req.params.name))
 })
 
-app.listen(3001, function () {
+app.listen(3000, function () {
   console.log('app listening on port 3000!')
 })
